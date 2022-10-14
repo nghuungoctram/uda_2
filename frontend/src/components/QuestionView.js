@@ -70,7 +70,7 @@ class QuestionView extends Component {
       type: "GET",
       success: (result) => {
         this.setState({
-          questions: result.question,
+          questions: result.questions,
           totalQuestions: result.total,
           currentCategory: result.category,
         });
@@ -85,10 +85,10 @@ class QuestionView extends Component {
 
   submitSearch = (searchTerm) => {
     $.ajax({
-      url: `/questions`,
+      url: `/question`,
       type: "POST",
       dataType: "json",
-      data: JSON.stringify({ search_term: searchTerm }),
+      data: JSON.stringify({ searchTerm: searchTerm }),
       contentType: "application/json",
       xhrFields: {
         withCredentials: true,
@@ -99,6 +99,7 @@ class QuestionView extends Component {
           questions: result.questions,
           totalQuestions: result.total
         });
+        console.log(this.setState)
         return;
       },
       error: (error) => {
@@ -138,7 +139,7 @@ class QuestionView extends Component {
             Categories
           </h2>
           <ul>
-            {this.state.categories.map((category) => (
+            {this.state?.categories?.map((category) => (
               <li
                 key={category.id}
                 onClick={() => {
@@ -154,7 +155,7 @@ class QuestionView extends Component {
         </div>
         <div className="questions-list">
           <h2>Questions</h2>
-          {this.state.questions.map((q, ind) => (
+          {this.state.questions.map((q) => (
             <Question
               key={q.id}
               question={q.question}

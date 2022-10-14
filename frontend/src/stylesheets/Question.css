@@ -9,14 +9,14 @@
   padding: 0 1rem;
 }
 
-.categories-list > ul li {
+.categories-list>ul li {
   cursor: pointer;
   display: flex;
   align-items: center;
   margin-bottom: 0.5rem;
 }
 
-.categories-list > form {
+.categories-list>form {
   width: 60%;
 }
 
@@ -79,5 +79,9 @@ img.cate {
 }
 
 img.delete {
+  width: 20px;
+}
+
+.category {
   width: 20px;
 }

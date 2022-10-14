@@ -1,10 +1,8 @@
 import os
 from flask import Flask, request, abort, jsonify
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import and_, func
 from sqlalchemy.sql.operators import ColumnOperators
 from flask_cors import CORS
-import random
 
 from models import setup_db, Question, Category
 
@@ -54,13 +52,10 @@ def create_app(test_config=None):
         questions = Question.query.order_by(Question.id).all()
         currentQuestions = paginate_questions(request, questions)
 
-        if len(currentQuestions) == 0:
-            return abort(404)
-
         categories = Category.query.all()
-        cateType = {}
+        cateType = []
         for category in categories:
-            cateType[category.id] = category.type
+            cateType.append({"id": category.id, "type": category.type})
 
         return jsonify({
             'success': True,
@@ -115,11 +110,11 @@ def create_app(test_config=None):
                 question = Question(question=body['question'], answer=body['answer'],
                                     category=body['category'], difficulty=body['difficulty'])
                 question.insert()
-                return jsonify({
-                    'success': True,
-                    'created': question.id,
-                    'question': question
-                }), 200
+                return jsonify(
+                    success=True,
+                    created=question.format()["id"],
+                    question=question.format()
+                ), 200
         except:
             return abort(400)
 
@@ -130,12 +125,9 @@ def create_app(test_config=None):
             Category.id == category_id).all()
         questionsFromCates = [question.format() for question in questions]
 
-        if len(paginate_questions(request, questions)) == 0:
-            abort(404)
-
         return jsonify({
             'success': True,
-            'question': questionsFromCates,
+            'questions': questionsFromCates,
             'total': len(questions),
             'category': category_id
         }), 200
