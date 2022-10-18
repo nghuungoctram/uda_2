@@ -30,8 +30,17 @@ class FormView extends Component {
     });
   }
 
-  submitQuestion = (event) => {
-    event.preventDefault();
+  isCorrectAnswered = (answer) => {
+    if (answer) {
+      const answerValue = answer
+        .replace(/^\s+|\s+$|\s+(?=\s)/g, "")
+        .toLowerCase();
+      return answerValue;
+    }
+  };
+
+  submitQuestion = (e) => {
+    e.preventDefault();
     $.ajax({
       url: "/question",
       type: "POST",
@@ -39,7 +48,7 @@ class FormView extends Component {
       contentType: "application/json",
       data: JSON.stringify({
         question: this.state.question,
-        answer: this.state.answer,
+        answer: this.isCorrectAnswered(this.state.answer),
         difficulty: this.state.difficulty,
         category: parseInt(this.state.category),
       }),
@@ -58,30 +67,30 @@ class FormView extends Component {
     });
   };
 
-  handleChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value });
+  onChangeEvent = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
   };
 
   render() {
     return (
-      <div id="add-form">
+      <div id="add-question-container">
         <h2>Add a New Trivia Question</h2>
         <form
-          className="form-view"
+          className="add-question-form"
           id="add-question-form"
           onSubmit={this.submitQuestion}
         >
           <label>
             Question
-            <input type="text" name="question" onChange={this.handleChange} />
+            <input type="text" name="question" onChange={this.onChangeEvent} />
           </label>
           <label>
             Answer
-            <input type="text" name="answer" onChange={this.handleChange} />
+            <input type="text" name="answer" onChange={this.onChangeEvent} />
           </label>
           <label>
             Difficulty
-            <select name="difficulty" onChange={this.handleChange}>
+            <select name="difficulty" onChange={this.onChangeEvent}>
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -91,7 +100,7 @@ class FormView extends Component {
           </label>
           <label>
             Category
-            <select name="category" onChange={this.handleChange}>
+            <select name="category" onChange={this.onChangeEvent}>
               {this.state.categories.map((category) => {
                 return (
                   <option key={category.id} value={category.id}>

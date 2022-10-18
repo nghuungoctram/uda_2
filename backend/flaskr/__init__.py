@@ -35,20 +35,22 @@ def create_app(test_config=None):
         return response
 
     # GET requests for all categories if available
-    @app.route('/categories')
-    def get_categories():
-        categories = Category.query.all()
-        currentCates = [category.format() for category in categories]
+    @app.route('/categories', methods=['GET'])
+    def get_categories_method():
+        try:
+            categories = Category.query.all()
+            print(categories)
 
-        return jsonify({
-            'success': True,
-            'currentCates': currentCates,
-            'totalCates': len(categories)
-        }), 200
+            return jsonify({
+                'success': True,
+                'currentCates': [category.format() for category in categories],
+            }), 200
+        except:
+            return abort(400)
 
     # GET questions including pagination
     @app.route('/questions')
-    def get_questions():
+    def get_questions_method():
         questions = Question.query.order_by(Question.id).all()
         currentQuestions = paginate_questions(request, questions)
 
@@ -63,23 +65,16 @@ def create_app(test_config=None):
                 'questions': currentQuestions,
                 'categories': cateType
             },
-            'totalQuestions': len(questions),
             'category': 'All'
         }), 200
 
     # DELETE question using a question ID.
     @app.route('/question/<int:question_id>', methods=['DELETE'])
-    def delete_question(question_id):
+    def delete_question_method(question_id):
         try:
             question = Question.query.get(question_id)
-            if question is None:
-                return abort(400)
 
-            # test a block of code for errors
-            try:
-                question.delete()
-            except:
-                return abort(400)
+            question.delete()
 
             return jsonify({
                 'success': True,
@@ -87,24 +82,24 @@ def create_app(test_config=None):
                 'questions': paginate_questions(request, (Question.query.order_by(Question.id).all())),
             }), 200
 
-        except Exception:
+        except Exception as e:
+            print(e.message)
             abort(422)
 
     # POST a new question
     @app.route('/question', methods=['POST'])
-    def add_question():
+    def add_question_method():
         body = request.get_json()
         searchTerm = body.get('searchTerm', None)
         try:
             if searchTerm:
                 questions = Question.query.filter(
                     Question.question.ilike('%'+searchTerm+'%')).all()
-                currentQuestions = [question.format()
-                                    for question in questions]
+
                 return jsonify({
                     'success': True,
-                    'questions': currentQuestions,
-                    'total': len(currentQuestions)
+                    'questions': [question.format()
+                                  for question in questions],
                 }), 200
             else:
                 question = Question(question=body['question'], answer=body['answer'],
@@ -120,44 +115,38 @@ def create_app(test_config=None):
 
     # GET question based on category
     @app.route('/category/<int:category_id>/questions')
-    def get_question_from_category(category_id):
-        questions = Question.query.join(Category, Question.category == Category.id).filter(
-            Category.id == category_id).all()
-        questionsFromCates = [question.format() for question in questions]
+    def get_question_filter_by_category_method(category_id):
+        getQuestions = [question.format() for question in
+                        Question.query.filter(Question.category == category_id)]
 
         return jsonify({
             'success': True,
-            'questions': questionsFromCates,
-            'total': len(questions),
-            'category': category_id
+            'category': category_id,
+            'questions': getQuestions
         }), 200
 
     # POST get questions to play the quiz
     @app.route('/quiz/question', methods=['POST'])
-    def quiz():
+    def quiz_method():
         body = request.get_json()
         if body['category'] == 0:
             question = Question.query.join(Category, Question.category == Category.id)\
-                .filter(ColumnOperators.notin_(Question.id, body['previous_questions']))\
                 .order_by(func.random())\
                 .first()
         else:
             question = Question.query.join(Category, Question.category == Category.id)\
-                .filter(and_(Category.id == body['category'], ColumnOperators.notin_(Question.id, body['previous_questions'])))\
-                .order_by(func.random())\
+                .filter(Category.id == int(body['category']))\
+                .order_by(func.random()) \
                 .first()
 
-        if question is None:
-            return abort(400)
+        return jsonify(
+            success=True,
+            question=question.format()
+        ), 200
 
-        return jsonify({
-            'success': True,
-            'question': question.format()
-        }), 200
-
-    # Error handlers
+    # Error Handlers
     @app.errorhandler(400)
-    def bad_request(e):
+    def bad_request(error):
         return jsonify({
             'success': False,
             'error': 'Bad Request',
@@ -189,22 +178,3 @@ def create_app(test_config=None):
         }), 422
 
     return app
-
-    # * Hi reviewer. I commented this method beacause I wanted to try combine add question method and search
-    # * question method in only code block. Thanks
-    # @app.route('/questions', methods=['POST'])
-    # def search_questions():
-    #     body = request.get_json()
-    #     searchTerm = body.get('searchTerm', None)
-
-    #     if searchTerm:
-    #         questions = Question.query.filter( Question.question.ilike(f'%{search_term}%')).all()
-    #         currentQuestions = [question.format() for question in questions]
-    #     else:
-    #         return abort(400)
-
-    #     return jsonify({
-    #         'success': True,
-    #         'dataResult': currentQuestions,
-    #         'total': len(currentQuestions)
-    #     }), 200

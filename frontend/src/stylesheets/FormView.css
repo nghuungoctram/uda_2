@@ -1,7 +1,7 @@
-.form-view > label {
-  padding: 0px 0px 10px;
+.add-question-form>label {
+  padding: 0px 0px 12px;
 }
 
-#add-form {
+#add-question-container {
   text-align: center;
 }

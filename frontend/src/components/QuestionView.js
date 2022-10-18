@@ -32,6 +32,7 @@ class QuestionView extends Component {
           totalQuestions: result.total,
           currentCategory: result.dataResult.category,
         });
+        console.log(this.state)
         return;
       },
       error: (error) => {
@@ -99,7 +100,6 @@ class QuestionView extends Component {
           questions: result.questions,
           totalQuestions: result.total
         });
-        console.log(this.setState)
         return;
       },
       error: (error) => {

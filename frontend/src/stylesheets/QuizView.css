@@ -1,52 +1,52 @@
-.quiz-play-holder {
+.quiz-play-container {
   width: 80%;
-  margin-left: 10%;
+  margin-top: 45px;
+  margin-left: 12%;
   text-align: center;
-  margin-top: 40px;
 }
 
-.category-holder {
-  margin-top: 16px;
-  font-size: 24px;
+.category-wrapper {
+  margin-top: 20px;
+  font-size: 25px;
 }
 
-.choose-header {
-  font-size: 34px;
+.cate-selection {
   font-weight: bold;
-}
-
-.play-category {
-  cursor: pointer;
-}
-
-.play-category:hover {
-  color: dodgerblue;
+  font-size: 37px;
 }
 
 .btn {
   cursor: pointer;
-  margin-top: 5px;
-  background-color: dodgerblue;
-  color: white;
-  padding: 0.25rem 1rem;
   align-self: center;
-  border-radius: 4px;
+  margin-top: 10px;
+  border-radius: 6px;
+  padding: 0.25rem 1rem;
+  background-color: blue;
+  color: white;
 }
 
 div.btn {
-  margin-top: 20px;
-  margin-left: calc(50% - 50px);
+  margin-top: 25px;
+  margin-left: calc(50% - 40px);
 }
 
-.quiz-question {
-  margin: 12px;
-  font-size: 24px;
+.quiz-play-cate {
+  cursor: pointer;
 }
 
-.correct {
-  color: green;
+.quiz-play-cate:hover {
+  color: blue;
 }
 
-.wrong {
-  color: red;
+.quiz-play-question {
+  margin: 15px;
+  font-size: 25px;
+}
+
+.correct-answer {
+  color: rgb(89, 163, 89);
+}
+
+.wrong-answer {
+  color: rgb(70, 2, 2);
 }

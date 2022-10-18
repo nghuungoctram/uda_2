@@ -1,17 +1,17 @@
 .App-header {
-  background-color: #222;
+  background-color: black;
+  height: 80px;
+  padding: 25px;
+  padding-right: 40%;
+  padding-left: 5%;
   color: white;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 75px;
-  padding: 20px;
-  padding-right: 40%;
-  padding-left: 5%;
 }
 
-.App-header > h1 {
-  color: dodgerblue;
+.App-header>h1 {
+  color: blue;
 }
 
 .App-header a {
@@ -20,7 +20,7 @@
 }
 
 .App-intro {
-  font-size: large;
+  font-size: 25px;
 }
 
 ul {
@@ -30,7 +30,7 @@ ul {
 
 form {
   display: flex;
-  flex-direction: column;
-  width: 80%;
   margin: auto;
+  flex-direction: column;
+  width: 82%;
 }
